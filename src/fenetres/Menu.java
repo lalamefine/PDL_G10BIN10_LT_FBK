@@ -1,5 +1,5 @@
 package fenetres;
 
-public class menu {
+public class Menu {
 
 }
