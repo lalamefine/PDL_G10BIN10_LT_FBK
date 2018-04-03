@@ -1,21 +1,19 @@
 package fenetres;
 
-	
-	import javax.swing.JPanel;
-	import javax.swing.BorderFactory;
-	import java.awt.event.ActionEvent;
-	import java.awt.event.ActionListener;
-	import java.awt.GridBagConstraints;
-	import java.awt.GridBagLayout;
-	import java.awt.Insets;
-	import javax.swing.JButton;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 	/**
 	 * @author  Administrator
 	 * @created April 2, 2018
 	 */
-public class Menu extends JPanel implements ActionListener {
-    JButton bt_lieux;
+public class Menu extends JFrame implements ActionListener {
+   
+	private static final long serialVersionUID = 1L;
+    
+	JButton bt_lieux;
     JButton bt_personnes;
     JButton bt_badges;
     JButton bt_reporting;
@@ -25,7 +23,9 @@ public class Menu extends JPanel implements ActionListener {
      */
     public Menu() {
         super();
-
+        
+        this.setTitle("Menu");
+        this.setSize(300,200);
         GridBagLayout gbMenu = new GridBagLayout();
         GridBagConstraints gbcMenu = new GridBagConstraints();
         setLayout( gbMenu );
@@ -85,23 +85,47 @@ public class Menu extends JPanel implements ActionListener {
         gbcMenu.insets = new Insets( 4,4,4,4 );
         gbMenu.setConstraints( bt_reporting, gbcMenu );
         add( bt_reporting );
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setVisible(true);
     } 
 
     /**
      */
-    public void actionPerformed( ActionEvent e ) {
-        if ( e.getSource() == bt_lieux ) {
-        // Action for bt_lieux
+    GererLieux fenLieux = null;
+    GererPersonnes fenPersonnes = null;
+    GererBadges fenBadges = null;
+    Reporting fenReporting = null;
+	public void actionPerformed(ActionEvent arg0) {
+        if ( arg0.getSource() == bt_lieux ) {
+        	if(fenLieux == null) {
+        		fenLieux = new GererLieux();
+        	}else{
+        		fenLieux.setVisible(true);
+        	}
         }
-        if ( e.getSource() == bt_personnes ) {
-        // Action for bt_personnes
+        if ( arg0.getSource() == bt_personnes ) {
+        	if(fenPersonnes == null) {
+        		fenPersonnes = new GererPersonnes();
+        	}else{
+        		fenPersonnes.setVisible(true);
+        	}
         }
-        if ( e.getSource() == bt_badges ) {
-        // Action for bt_badges
+        if ( arg0.getSource() == bt_badges ) {
+        	if(fenBadges == null) {
+        		fenBadges = new GererBadges();
+        	}else{
+        		fenBadges.setVisible(true);
+        	}
         }
-        if ( e.getSource() == bt_reporting ) {
-        // Action for bt_reporting
+        if ( arg0.getSource() == bt_reporting ) {
+        	if(fenReporting == null) {
+        		fenReporting = new Reporting();
+        	}else{
+        		fenReporting.setVisible(true);
+        	}
         }
-    } 
+		// TODO Auto-generated method stub
+		
+	} 
 
 } 
