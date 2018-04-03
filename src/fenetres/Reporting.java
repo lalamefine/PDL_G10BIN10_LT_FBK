@@ -1,5 +1,6 @@
 package fenetres;
 
+import core.*;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -45,7 +46,7 @@ public class Reporting extends JFrame implements ActionListener {
         this.setVisible(true);
 		
 	}
-	@Override
+
 	public void actionPerformed(ActionEvent arg0) {
 		// TODO Auto-generated method stub
 		

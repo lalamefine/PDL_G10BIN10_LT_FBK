@@ -1,5 +1,6 @@
 package fenetres;
 
+import core.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -9,7 +10,7 @@ import reseau.LienBDD;
 public class GererPersonnes extends JFrame implements ActionListener  {
     
 	private static final long serialVersionUID = 1L;
-
+	int idPersonne = -1;
 	JButton bt_Supprimer;
 	JButton bt_Modifier;
 	JButton bt_Creer;
@@ -47,6 +48,7 @@ public class GererPersonnes extends JFrame implements ActionListener  {
 		gbcPanel0.insets = new Insets( 2,2,2,2 );
 		gbPanel0.setConstraints( bt_Supprimer, gbcPanel0 );
 		this.add( bt_Supprimer );
+		bt_Supprimer.addActionListener(this);
 
 		bt_Charger = new JButton( "Charger"  );
 		gbcPanel0.gridx = 18;
@@ -60,6 +62,7 @@ public class GererPersonnes extends JFrame implements ActionListener  {
 		gbcPanel0.insets = new Insets( 2,2,2,2 );
 		gbPanel0.setConstraints( bt_Charger, gbcPanel0 );
 		this.add( bt_Charger );
+		bt_Charger.addActionListener(this);
 		
 		bt_Modifier = new JButton( "Modifier"  );
 		bt_Modifier.setEnabled( false );
@@ -74,6 +77,7 @@ public class GererPersonnes extends JFrame implements ActionListener  {
 		gbcPanel0.insets = new Insets( 2,2,2,2 );
 		gbPanel0.setConstraints( bt_Modifier, gbcPanel0 );
 		this.add( bt_Modifier );
+		bt_Modifier.addActionListener(this);
 		
 		bt_Creer = new JButton( "Creer"  );
 		gbcPanel0.gridx = 12;
@@ -87,6 +91,7 @@ public class GererPersonnes extends JFrame implements ActionListener  {
 		gbcPanel0.insets = new Insets( 2,2,2,2 );
 		gbPanel0.setConstraints( bt_Creer, gbcPanel0 );
 		this.add( bt_Creer );
+		bt_Creer.addActionListener(this);
 		
 		lb_Nom = new JLabel( "Nom"  );
 		gbcPanel0.gridx = 1;
@@ -199,10 +204,51 @@ public class GererPersonnes extends JFrame implements ActionListener  {
         this.setVisible(true);
     }
 
-	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		// TODO Auto-generated method stub
+		LienBDD reseau = new LienBDD();
+        if ( arg0.getSource() == bt_Supprimer ) {
+        	reseau.suppPers(idPersonne);
+			modeNouveau();
+        }
+		if ( arg0.getSource() == bt_Modifier ) {
+			reseau.updatePers(idPersonne, tf_Nom.getText(), tf_Prenom.getText(), tf_naissance.getText(), cmb_fonction.getSelectedItem().toString());
+			modeNouveau();
+        }
+		if ( arg0.getSource() == bt_Creer ) {
+			reseau.addPers(tf_Nom.getText(), tf_Prenom.getText(), tf_naissance.getText(), cmb_fonction.getSelectedItem().toString());
+			modeNouveau();
+        }
+		if ( arg0.getSource() == bt_Charger ) {
+			//this.setVisible(false);
+			new Rechercher(this);
+        }
 		
+	}
+
+	public void modeNouveau() {
+		bt_Creer.setEnabled( true );
+		bt_Modifier.setEnabled( false );
+		bt_Charger.setEnabled( true );
+		bt_Supprimer.setEnabled( false );
+		tf_Nom.setText("");
+		tf_Prenom.setText("");
+		tf_naissance.setText("");
+	}
+	
+	public void modeCharge() {
+		bt_Creer.setEnabled( false );
+		bt_Modifier.setEnabled( true );
+		bt_Charger.setEnabled( false );
+		bt_Supprimer.setEnabled( true );
+	}
+	
+	public void setChamps(int id,String nom, String prenom, String naissance, String fonction) {
+		idPersonne = id;
+		tf_Nom.setText(nom);
+		tf_Prenom.setText(prenom);
+		tf_naissance.setText(naissance);
+		cmb_fonction.setSelectedItem(fonction);
+		modeCharge();
 	}
         
 }

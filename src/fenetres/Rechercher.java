@@ -1,5 +1,6 @@
 package fenetres;
 
+import core.*;
 import reseau.LienBDD;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,37 +15,43 @@ import javax.swing.JFrame;
 public class Rechercher extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
-	private ArrayList<String> output;
-	
-	JButton btChargerPersonne;
+	private ArrayList inList;
+	private int mode = 0;
+	JButton btCharger;
 	JTextField tfText5;
 	JList<String> lsList1;
 	JButton bt_Valider;
+	JFrame papa;
 	
-	public Rechercher(int type) {
-        super();
-		
-        switch(type) {
-        case 0:
-            this.setTitle("Rechercher une personne");
-        	
-        	break;
-        case 1:
-            this.setTitle("Rechercher un lieu");
-        	
-        	break;
-        case 2:
-            this.setTitle("Rechercher un badge");
-        	
-        	break;
-        }
+	public Rechercher(GererPersonnes papa) {
+		this.papa = papa;
+		mode = 0;
+		this.setTitle("Rechercher une personne");
+        setup();
+    }
+	public Rechercher(GererLieux papa) {
+		this.papa = papa;
+		mode = 1;
+        this.setTitle("Rechercher un lieu");
+        setup();
+    }
+	public Rechercher(GererBadges papa) {
+		this.papa = papa;
+		mode = 2;
+        this.setTitle("Rechercher un badge");
+        setup();
+    }
+    
+	
+    private void setup() {  
+    	System.out.println("coucou");
         this.setSize(500,150);
         
         GridBagLayout gbPanel0 = new GridBagLayout();
         GridBagConstraints gbcPanel0 = new GridBagConstraints();
         this.setLayout( gbPanel0 );
 		
-		btChargerPersonne = new JButton( "Rechercher"  );
+		btCharger = new JButton( "Rechercher"  );
 		gbcPanel0.gridx = 16;
 		gbcPanel0.gridy = 0;
 		gbcPanel0.gridwidth = 8;
@@ -53,8 +60,9 @@ public class Rechercher extends JFrame implements ActionListener {
 		gbcPanel0.weightx = 1;
 		gbcPanel0.weighty = 0;
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
-		gbPanel0.setConstraints( btChargerPersonne, gbcPanel0 );
-		this.add( btChargerPersonne );
+		gbPanel0.setConstraints( btCharger, gbcPanel0 );
+		this.add( btCharger );
+		btCharger.addActionListener(this);
 		
 		tfText5 = new JTextField( );
 		gbcPanel0.gridx = 0;
@@ -68,7 +76,7 @@ public class Rechercher extends JFrame implements ActionListener {
 		gbPanel0.setConstraints( tfText5, gbcPanel0 );
 		this.add( tfText5 );
 		
-		String []dataList1 = { "Aucun Résultat" };
+		String []dataList1 = {};
 		lsList1 = new JList<String>( dataList1 );
 		gbcPanel0.gridx = 0;
 		gbcPanel0.gridy = 2;
@@ -93,6 +101,7 @@ public class Rechercher extends JFrame implements ActionListener {
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
 		gbPanel0.setConstraints( bt_Valider, gbcPanel0 );
 		this.add( bt_Valider );
+		bt_Valider.addActionListener(this);
 
 
         this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
@@ -100,12 +109,45 @@ public class Rechercher extends JFrame implements ActionListener {
 	}
 	
 	public void actionPerformed(ActionEvent arg0) {
-		// TODO Auto-generated method stub
-		
+		String [] dataList1;
+        if ( arg0.getSource() == btCharger ) {
+        	LienBDD reseau = new LienBDD();
+        	switch(mode) {
+        	default:
+            	inList = reseau.listPers(tfText5.getText());
+            	dataList1 = new String[inList.size()];
+            	for(int j = 0; j<inList.size();j++)
+            		dataList1[j] = ((Personne)inList.get(j)).getNom() + " " + ((Personne)(inList.get(j))).getPrenom();
+        		break;
+        	case 1:
+            	inList = reseau.listLieu(tfText5.getText());
+            	dataList1 = new String[inList.size()];
+            	for(int j = 0; j<inList.size();j++)
+            		dataList1[j] = ((Lieu)inList.get(j)).getEmplacement() + ((Lieu)inList.get(j)).getBloque();
+        		break;
+        	case 2:
+            	inList = reseau.listBadge(tfText5.getText());
+            	dataList1 = new String[inList.size()];
+            	for(int j = 0; j<inList.size();j++)
+            		dataList1[j] = ((Badge)inList.get(j)).getId() + " " + ((Badge)inList.get(j)).getBloque() + " " + ((Badge)(inList.get(j))).getProprietaireId();
+        		break;
+        		
+        	}      	
+        	lsList1.setListData(dataList1);
+        }
+		if ( arg0.getSource() == bt_Valider ) {
+			int i = lsList1.getSelectedIndex();
+        	switch(mode) {
+        	default:((GererPersonnes)papa).setChamps(((Personne)inList.get(i)).getId(), ((Personne)inList.get(i)).getNom(), ((Personne)inList.get(i)).getPrenom(), ((Personne)inList.get(i)).getNaissance(), ((Personne)inList.get(i)).getFonction());
+				break;
+        	case 1://TODO
+        		break;
+        	case 2://TODO
+        		break;
+        	}
+        	this.setVisible(false);
+        }
 	}
 	
-	public ArrayList<String> getOutput() {
-		return output;
-	}
-
+	
 }
