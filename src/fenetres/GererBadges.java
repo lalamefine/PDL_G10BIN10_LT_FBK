@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+@SuppressWarnings("unused")
 public class GererBadges extends JFrame implements ActionListener  {
 
 	private static final long serialVersionUID = 1L;
@@ -92,7 +93,6 @@ public class GererBadges extends JFrame implements ActionListener  {
 		bt_Creer.addActionListener(this);
 		
 		bt_Bloquer = new JButton( "Bloquer"  );
-		bt_Bloquer.setEnabled( false );
 		gbcPanel0.gridx = 18;
 		gbcPanel0.gridy = 0;
 		gbcPanel0.gridwidth = 6;
@@ -104,6 +104,7 @@ public class GererBadges extends JFrame implements ActionListener  {
 		gbcPanel0.insets = new Insets( 2,2,2,2 );
 		gbPanel0.setConstraints( bt_Bloquer, gbcPanel0 );
 		this.add( bt_Bloquer );
+		bt_Bloquer.addActionListener(this);
 
 
 		tf_idaff = new JTextField( );
@@ -143,6 +144,7 @@ public class GererBadges extends JFrame implements ActionListener  {
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
 		gbPanel0.setConstraints( btChargerPersonne, gbcPanel0 );
 		this.add( btChargerPersonne );
+		btChargerPersonne.addActionListener(this);
 		
 		lbNom = new JLabel( "Nom : "  );
 		gbcPanel0.gridx = 6;
@@ -171,7 +173,11 @@ public class GererBadges extends JFrame implements ActionListener  {
 
         }
 		if ( arg0.getSource() == bt_Bloquer ) {
-
+			if(bloque == 0)
+				bloque = 1;
+			else
+				bloque = 0;
+			majBloque();
         }
 		if ( arg0.getSource() == bt_Charger ) {
 
@@ -179,6 +185,23 @@ public class GererBadges extends JFrame implements ActionListener  {
 		
 	}
 
+	public void modeNouveau() {
+		bt_Creer.setEnabled( true );
+		bt_Modifier.setEnabled( false );
+		bt_Charger.setEnabled( true );
+		bt_Supprimer.setEnabled( false );
+		idBadge = -1;
+		bloque = 0;
+		majBloque();
+		tf_idaff.setText("");
+	}
+	
+	public void modeCharge() {
+		bt_Creer.setEnabled( false );
+		bt_Modifier.setEnabled( true );
+		bt_Charger.setEnabled( false );
+		bt_Supprimer.setEnabled( true );
+	}
 	public void setChamps(int id,int idAff, int bloque) {
 		idBadge = id;
 		tf_idaff.setText(String.valueOf(idAff));
@@ -191,6 +214,7 @@ public class GererBadges extends JFrame implements ActionListener  {
 		}else {
 			bt_Bloquer.setText("Debloquer");
 		}
+		bt_Bloquer.repaint();
 	}
     
 }

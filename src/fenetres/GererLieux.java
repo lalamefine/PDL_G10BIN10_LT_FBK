@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+@SuppressWarnings("unused")
 public class GererLieux extends JFrame implements ActionListener  {
 
 	private static final long serialVersionUID = 1L;
@@ -110,7 +111,6 @@ public class GererLieux extends JFrame implements ActionListener  {
 		this.add( lb_Emplacement );
 		
 		bt_Bloquer = new JButton( "Bloquer"  );
-		bt_Bloquer.setEnabled( false );
 		gbcPanel0.gridx = 18;
 		gbcPanel0.gridy = 0;
 		gbcPanel0.gridwidth = 6;
@@ -122,6 +122,7 @@ public class GererLieux extends JFrame implements ActionListener  {
 		gbcPanel0.insets = new Insets( 2,2,2,2 );
 		gbPanel0.setConstraints( bt_Bloquer, gbcPanel0 );
 		this.add( bt_Bloquer );
+		bt_Bloquer.addActionListener(this);
 		
 		taAdresse = new JTextArea(2,10);
 		JScrollPane scpAdresse = new JScrollPane( taAdresse );
@@ -208,12 +209,34 @@ public class GererLieux extends JFrame implements ActionListener  {
 
         }
 		if ( arg0.getSource() == bt_Bloquer ) {
-
+			if(bloque == 0)
+				bloque = 1;
+			else
+				bloque = 0;
+			majBloque();
         }
 		if ( arg0.getSource() == bt_Charger ) {
 
         }
         
+	}
+	public void modeNouveau() {
+		bt_Creer.setEnabled( true );
+		bt_Modifier.setEnabled( false );
+		bt_Charger.setEnabled( true );
+		bt_Supprimer.setEnabled( false );
+		idLieu = -1;
+		bloque = 0;
+		majBloque();
+		taAdresse.setText("");
+		tfNbacces.setText("");
+	}
+	
+	public void modeCharge() {
+		bt_Creer.setEnabled( false );
+		bt_Modifier.setEnabled( true );
+		bt_Charger.setEnabled( false );
+		bt_Supprimer.setEnabled( true );
 	}
 	
 	public void setChamps(int id,String emplacement, int nbAcces, String horraires, int bloque) {

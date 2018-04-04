@@ -15,6 +15,7 @@ import javax.swing.JFrame;
 public class Rechercher extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
+	@SuppressWarnings("rawtypes")
 	private ArrayList inList;
 	private int mode = 0;
 	JButton btCharger;
@@ -44,7 +45,6 @@ public class Rechercher extends JFrame implements ActionListener {
     
 	
     private void setup() {  
-    	System.out.println("coucou");
         this.setSize(500,150);
         
         GridBagLayout gbPanel0 = new GridBagLayout();
@@ -75,6 +75,7 @@ public class Rechercher extends JFrame implements ActionListener {
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
 		gbPanel0.setConstraints( tfText5, gbcPanel0 );
 		this.add( tfText5 );
+		tfText5.addActionListener(this);
 		
 		String []dataList1 = {};
 		lsList1 = new JList<String>( dataList1 );
@@ -109,9 +110,9 @@ public class Rechercher extends JFrame implements ActionListener {
 	}
 	
 	public void actionPerformed(ActionEvent arg0) {
-		String [] dataList1;
-        if ( arg0.getSource() == btCharger ) {
-        	LienBDD reseau = new LienBDD();
+    	LienBDD reseau = new LienBDD();
+		if ( arg0.getSource() == btCharger || arg0.getSource() == tfText5) {
+    		String [] dataList1;
         	switch(mode) {
         	default:
             	inList = reseau.listPers(tfText5.getText());
@@ -140,7 +141,7 @@ public class Rechercher extends JFrame implements ActionListener {
         	switch(mode) {
         	default:((GererPersonnes)papa).setChamps(((Personne)inList.get(i)).getId(), ((Personne)inList.get(i)).getNom(), ((Personne)inList.get(i)).getPrenom(), ((Personne)inList.get(i)).getNaissance(), ((Personne)inList.get(i)).getFonction());
 				break;
-        	case 1://TODO
+        	case 1:((GererLieux)papa).setChamps(((Lieu)inList.get(i)).getId(),((Lieu)inList.get(i)).getEmplacement(),((Lieu)inList.get(i)).getNbAcces(),((Lieu)inList.get(i)).getHorraires(),((Lieu)inList.get(i)).getBloque());
         		break;
         	case 2://TODO
         		break;

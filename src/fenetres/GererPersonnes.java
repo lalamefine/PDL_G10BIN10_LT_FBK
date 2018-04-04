@@ -1,6 +1,6 @@
 package fenetres;
 
-import core.*;
+//import core.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -230,6 +230,7 @@ public class GererPersonnes extends JFrame implements ActionListener  {
 		bt_Modifier.setEnabled( false );
 		bt_Charger.setEnabled( true );
 		bt_Supprimer.setEnabled( false );
+		idPersonne = -1;
 		tf_Nom.setText("");
 		tf_Prenom.setText("");
 		tf_naissance.setText("");

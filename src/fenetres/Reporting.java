@@ -12,6 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+@SuppressWarnings("unused")
 public class Reporting extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
