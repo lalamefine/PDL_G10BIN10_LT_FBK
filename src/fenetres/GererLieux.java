@@ -7,7 +7,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-@SuppressWarnings("unused")
+/**
+ * Classe de la fenetre de gestion des lieux
+ * @author Louis Triboulin & Fatoumata Bintou Ka
+ * @created April 2, 2018
+ */
 public class GererLieux extends JFrame implements ActionListener  {
 
 	private static final long serialVersionUID = 1L;
@@ -25,8 +29,9 @@ public class GererLieux extends JFrame implements ActionListener  {
 	JComboBox<String> cmbCombo0;
 	JTextField tfNbacces;
 	JLabel lbLabel4;
+	
     /**
-     *Constructor for the Menu object
+     * Constructeur de la fenetre de gestion des lieux
      */
     public GererLieux() {
         super();
@@ -181,7 +186,7 @@ public class GererLieux extends JFrame implements ActionListener  {
 		gbPanel0.setConstraints( lbLabel4, gbcPanel0 );
 		this.add( lbLabel4 );   
 		
-		lbLabel4 = new JLabel( "Horraires"  );
+		lbLabel4 = new JLabel( "Horaires"  );
 		gbcPanel0.gridx = 1;
 		gbcPanel0.gridy = 15;
 		gbcPanel0.gridwidth = 6;
@@ -200,13 +205,16 @@ public class GererLieux extends JFrame implements ActionListener  {
 
 	public void actionPerformed(ActionEvent arg0) {
         if ( arg0.getSource() == bt_Supprimer ) {
-        	
+        	//TODO
         }
 		if ( arg0.getSource() == bt_Modifier ) {
-
+			//TODO
         }
 		if ( arg0.getSource() == bt_Creer ) {
-
+			//TODO
+        }
+		if ( arg0.getSource() == bt_Charger ) {
+			//TODO
         }
 		if ( arg0.getSource() == bt_Bloquer ) {
 			if(bloque == 0)
@@ -215,12 +223,13 @@ public class GererLieux extends JFrame implements ActionListener  {
 				bloque = 0;
 			majBloque();
         }
-		if ( arg0.getSource() == bt_Charger ) {
-
-        }
         
 	}
-	public void modeNouveau() {
+	
+	/**
+	 * Configure l'interface pour une nouvelle entrée
+	 */
+	private void modeNouveau() {
 		bt_Creer.setEnabled( true );
 		bt_Modifier.setEnabled( false );
 		bt_Charger.setEnabled( true );
@@ -232,22 +241,36 @@ public class GererLieux extends JFrame implements ActionListener  {
 		tfNbacces.setText("");
 	}
 	
-	public void modeCharge() {
+	/**
+	 *  Configure l'interface pour un lieu chargé
+	 */
+	private void modeCharge() {
 		bt_Creer.setEnabled( false );
 		bt_Modifier.setEnabled( true );
 		bt_Charger.setEnabled( false );
 		bt_Supprimer.setEnabled( true );
 	}
 	
-	public void setChamps(int id,String emplacement, int nbAcces, String horraires, int bloque) {
+	/**
+	 * Permets de renseigner les champs de l'interface depuis une classe externe
+	 * @param id
+	 * @param emplacement
+	 * @param nbAcces
+	 * @param horaires
+	 * @param bloque
+	 */
+	public void setChamps(int id,String emplacement, int nbAcces, String horaires, int bloque) {
 		idLieu = id;
 		taAdresse.setText(emplacement);
 		tfNbacces.setText(String.valueOf(nbAcces));
-		cmbCombo0.setSelectedItem(horraires);;
+		cmbCombo0.setSelectedItem(horaires);;
 		this.bloque = bloque;
 		majBloque();
 	}
 	
+	/**
+	 * Actualise le bouton Bloqué/Débloqué
+	 */
 	public void majBloque() {
 		if(bloque == 0) {
 			bt_Bloquer.setText("Bloquer");

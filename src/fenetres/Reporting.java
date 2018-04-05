@@ -1,24 +1,31 @@
 package fenetres;
 
-import core.*;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import reseau.LienBDD;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-@SuppressWarnings("unused")
+/**
+ * Classe de gestion de la fenetre du reporting
+ * @author Louis Triboulin & Fatoumata Bintou Ka
+ * @created April 2, 2018
+ */
 public class Reporting extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
     
     JTextArea textZone;
     
+	/**
+	 * Constructeur de la fenetre du reporting
+	 */
 	public Reporting() {
 	    super();
 	    
@@ -45,13 +52,16 @@ public class Reporting extends JFrame implements ActionListener {
 
         this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         this.setVisible(true);
-		
+        ArrayList<String> lst = LienBDD.readReporting();
+        String tmp = "";
+        System.out.println("len : " + lst.size());
+        for(int i = 0; i<lst.size();i++)
+        	tmp = tmp + lst.get(i) + "\n";
+        textZone.setText(tmp);
 	}
-
-	public void actionPerformed(ActionEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+	
+	// Obligatoire  
+	public void actionPerformed(ActionEvent arg0) {	}
 	
 
 }

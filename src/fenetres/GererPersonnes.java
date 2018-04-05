@@ -1,12 +1,16 @@
 package fenetres;
 
-//import core.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import reseau.LienBDD;
 
+/**
+ * Classe de la fenetre de gestion de personnes
+ * @author Louis Triboulin & Fatoumata Bintou Ka
+ * @created April 2, 2018
+ */
 public class GererPersonnes extends JFrame implements ActionListener  {
     
 	private static final long serialVersionUID = 1L;
@@ -24,6 +28,9 @@ public class GererPersonnes extends JFrame implements ActionListener  {
 	JTextField tf_naissance;
 	JLabel lb_naissance;
 
+	/**
+	 *  Constructeur de la fenetre de gestion des personnes
+	 */
 	public GererPersonnes() {
         super();
         
@@ -146,8 +153,8 @@ public class GererPersonnes extends JFrame implements ActionListener  {
 		gbPanel0.setConstraints( tf_Prenom, gbcPanel0 );
 		this.add( tf_Prenom );
 
-		String []data_fonction = { "Ouvrier", "Technicien", "Ingénieur", "Maintenance", 
-                "Cadre", "Assistant", "Employé" };
+		String []data_fonction = { "","Ouvrier", "Technicien", "Ingénieur", "Maintenance", 
+                "Cadre", "Assistant", "Employé" , "Autre"};
 		cmb_fonction = new JComboBox<String>( data_fonction );
 		gbcPanel0.gridx = 8;
 		gbcPanel0.gridy = 12;
@@ -205,27 +212,35 @@ public class GererPersonnes extends JFrame implements ActionListener  {
     }
 
 	public void actionPerformed(ActionEvent arg0) {
-		LienBDD reseau = new LienBDD();
         if ( arg0.getSource() == bt_Supprimer ) {
-        	reseau.suppPers(idPersonne);
+			int dialogButton = JOptionPane.YES_NO_OPTION;
+			int dialogResult = JOptionPane.showConfirmDialog(this,"Voulez-vous supprimer les badges qui lui sont associés?","Attention",dialogButton);
+			if(dialogResult==0)//A répondu Oui
+				LienBDD.suppBadgeFromOwner(idPersonne);
+        	LienBDD.suppPers(idPersonne);
 			modeNouveau();
         }
 		if ( arg0.getSource() == bt_Modifier ) {
-			reseau.updatePers(idPersonne, tf_Nom.getText(), tf_Prenom.getText(), tf_naissance.getText(), cmb_fonction.getSelectedItem().toString());
+			LienBDD.updatePers(idPersonne, tf_Nom.getText(), tf_Prenom.getText(), tf_naissance.getText(), cmb_fonction.getSelectedItem().toString());
 			modeNouveau();
         }
 		if ( arg0.getSource() == bt_Creer ) {
-			reseau.addPers(tf_Nom.getText(), tf_Prenom.getText(), tf_naissance.getText(), cmb_fonction.getSelectedItem().toString());
+			if(tf_Prenom.getText().length()!=0 && tf_Nom.getText().length() !=0)
+				LienBDD.addPers(tf_Nom.getText(), tf_Prenom.getText(), tf_naissance.getText(), cmb_fonction.getSelectedItem().toString());
+			else
+				JOptionPane.showMessageDialog(this, "Création impossible sans renseigner le nom et le prénom");
 			modeNouveau();
         }
 		if ( arg0.getSource() == bt_Charger ) {
-			//this.setVisible(false);
 			new Rechercher(this);
         }
 		
 	}
 
-	public void modeNouveau() {
+	/**
+	 * Configure l'interface pour accueillir une nouvelle personne
+	 */
+	private void modeNouveau() {
 		bt_Creer.setEnabled( true );
 		bt_Modifier.setEnabled( false );
 		bt_Charger.setEnabled( true );
@@ -236,13 +251,24 @@ public class GererPersonnes extends JFrame implements ActionListener  {
 		tf_naissance.setText("");
 	}
 	
-	public void modeCharge() {
+	/**
+	 * Configure l'interface pour une personne chargée 
+	 */
+	private void modeCharge() {
 		bt_Creer.setEnabled( false );
 		bt_Modifier.setEnabled( true );
 		bt_Charger.setEnabled( false );
 		bt_Supprimer.setEnabled( true );
 	}
 	
+	/**
+	 * Permet de renseigner les caractéristiques de la personne dans l'interface 
+	 * @param id
+	 * @param nom
+	 * @param prenom
+	 * @param naissance
+	 * @param fonction
+	 */
 	public void setChamps(int id,String nom, String prenom, String naissance, String fonction) {
 		idPersonne = id;
 		tf_Nom.setText(nom);

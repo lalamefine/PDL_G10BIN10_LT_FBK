@@ -5,21 +5,27 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-	/**
-	 * @author  Administrator
-	 * @created April 2, 2018
-	 */
+/**
+ * Classe de gestion de la fenetre du menu principal
+ * @author Louis Triboulin & Fatoumata Bintou Ka
+ * @created April 2, 2018
+ */
 public class Menu extends JFrame implements ActionListener {
    
 	private static final long serialVersionUID = 1L;
-    
+    		//Variables liées à l'interface
 	JButton bt_lieux;
     JButton bt_personnes;
     JButton bt_badges;
     JButton bt_reporting;
+    		//Variable liées à la gestion des fenetres
+    GererLieux fenLieux = null;
+    GererPersonnes fenPersonnes = null;
+    GererBadges fenBadges = null;
+    Reporting fenReporting = null;
 
     /**
-     *Constructor for the Menu object
+     * Constructeur de la fenetre du menu principal
      */
     public Menu() {
         super();
@@ -89,12 +95,6 @@ public class Menu extends JFrame implements ActionListener {
         this.setVisible(true);
     } 
 
-    /**
-     */
-    GererLieux fenLieux = null;
-    GererPersonnes fenPersonnes = null;
-    GererBadges fenBadges = null;
-    Reporting fenReporting = null;
 	public void actionPerformed(ActionEvent arg0) {
         if ( arg0.getSource() == bt_lieux ) {
         	if(fenLieux == null) {
@@ -124,7 +124,6 @@ public class Menu extends JFrame implements ActionListener {
         		fenReporting.setVisible(true);
         	}
         }
-		// TODO Auto-generated method stub
 		
 	} 
 

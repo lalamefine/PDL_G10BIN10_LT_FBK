@@ -7,12 +7,17 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-@SuppressWarnings("unused")
+/**
+ * Classe de la fenetre de gestion des badges
+ * @author Louis Triboulin & Fatoumata Bintou Ka
+ * @created April 2, 2018
+ */
 public class GererBadges extends JFrame implements ActionListener  {
 
 	private static final long serialVersionUID = 1L;
     int bloque = 0;
     int idBadge = -1;
+    int idProprio = -1;
 	JButton bt_Supprimer;
 	JButton bt_Modifier;
 	JButton bt_Creer;
@@ -23,11 +28,14 @@ public class GererBadges extends JFrame implements ActionListener  {
 	JButton btChargerPersonne;
 	JLabel lbNom;
     
+    /**
+     * Constructeur de la fenetre de gestion des Badges
+     */
     public GererBadges() {
         super();
         
         this.setTitle("Gestion des Badges");
-        this.setSize(500,150);
+        this.setSize(650,150);
         
 		GridBagLayout gbPanel0 = new GridBagLayout();
 		GridBagConstraints gbcPanel0 = new GridBagConstraints();
@@ -107,7 +115,7 @@ public class GererBadges extends JFrame implements ActionListener  {
 		bt_Bloquer.addActionListener(this);
 
 
-		tf_idaff = new JTextField( );
+		lb_idaff = new JLabel( );
 		gbcPanel0.gridx = 6;
 		gbcPanel0.gridy = 5;
 		gbcPanel0.gridwidth = 18;
@@ -117,13 +125,13 @@ public class GererBadges extends JFrame implements ActionListener  {
 		gbcPanel0.weighty = 0;
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
 		gbcPanel0.insets = new Insets( 4,4,4,4 );
-		gbPanel0.setConstraints( tf_idaff, gbcPanel0 );
-		this.add( tf_idaff );
+		gbPanel0.setConstraints( lb_idaff, gbcPanel0 );
+		this.add( lb_idaff );
 		
-		lb_idaff = new JLabel( "ID Personne affectée"  );
+		lb_idaff = new JLabel( "Personne affectée : "  );
 		gbcPanel0.gridx = 0;
 		gbcPanel0.gridy = 5;
-		gbcPanel0.gridwidth = 6;
+		gbcPanel0.gridwidth = 25;
 		gbcPanel0.gridheight = 2;
 		gbcPanel0.fill = GridBagConstraints.BOTH;
 		gbcPanel0.weightx = 1;
@@ -146,7 +154,7 @@ public class GererBadges extends JFrame implements ActionListener  {
 		this.add( btChargerPersonne );
 		btChargerPersonne.addActionListener(this);
 		
-		lbNom = new JLabel( "Nom : "  );
+		lbNom = new JLabel( "Id du badge : {généré à la création}"  );
 		gbcPanel0.gridx = 6;
 		gbcPanel0.gridy = 3;
 		gbcPanel0.gridwidth = 18;
@@ -164,13 +172,20 @@ public class GererBadges extends JFrame implements ActionListener  {
 
 	public void actionPerformed(ActionEvent arg0) {
         if ( arg0.getSource() == bt_Supprimer ) {
-        	
+        	LienBDD.suppBadge(idBadge);
+        	modeNouveau();
         }
 		if ( arg0.getSource() == bt_Modifier ) {
-
+			LienBDD.updateBadge(idBadge, idProprio, bloque);
+			modeNouveau();
         }
 		if ( arg0.getSource() == bt_Creer ) {
-
+			if( idProprio != -1) {
+				LienBDD.addBadge(idProprio, bloque);
+				modeNouveau();
+			}else {
+				JOptionPane.showMessageDialog(this, "Création impossible sans affecter de propriétaire");
+			}
         }
 		if ( arg0.getSource() == bt_Bloquer ) {
 			if(bloque == 0)
@@ -180,34 +195,63 @@ public class GererBadges extends JFrame implements ActionListener  {
 			majBloque();
         }
 		if ( arg0.getSource() == bt_Charger ) {
-
+			new Rechercher(this,false);
+        }
+		if ( arg0.getSource() == btChargerPersonne ) {
+			new Rechercher(this,true);
         }
 		
 	}
 
-	public void modeNouveau() {
+	/**
+	 * Configure l'interface pour une nouvelle entrée
+	 */
+	private void modeNouveau() {
 		bt_Creer.setEnabled( true );
 		bt_Modifier.setEnabled( false );
 		bt_Charger.setEnabled( true );
 		bt_Supprimer.setEnabled( false );
+		lbNom.setText("Id du badge : {généré à la création}");
 		idBadge = -1;
+	    idProprio = -1;
 		bloque = 0;
 		majBloque();
-		tf_idaff.setText("");
+		lb_idaff.setText(" Personne affectée :  ");
 	}
-	
-	public void modeCharge() {
+
+	/**
+	 *  Configure l'interface pour un badge chargé
+	 */
+	private void modeCharge() {
 		bt_Creer.setEnabled( false );
 		bt_Modifier.setEnabled( true );
 		bt_Charger.setEnabled( false );
 		bt_Supprimer.setEnabled( true );
 	}
+	
+	/**
+	 * Permet de renseigner les champs du badges dans l'interface
+	 * @param id
+	 * @param idAff
+	 * @param bloque
+	 */
 	public void setChamps(int id,int idAff, int bloque) {
 		idBadge = id;
-		tf_idaff.setText(String.valueOf(idAff));
+		lbNom.setText("Id du badge : " + id);
+		idProprio = idAff;
+		Personne p = LienBDD.findPersfromID(idAff);
+		if(p != null)
+			lb_idaff.setText(" Personne affectée :  " + p.getNom() + " " + p.getPrenom());
+		else
+			lb_idaff.setText(" Personne affectée :  Erreur: Propriétaire inexistant (ID_" + idAff +")");
 		this.bloque = bloque;
 		majBloque();
+		modeCharge();
 	}
+
+	/**
+	 * Actualise le bouton Bloqué/Débloqué
+	 */
 	public void majBloque() {
 		if(bloque == 0) {
 			bt_Bloquer.setText("Bloquer");
@@ -215,6 +259,16 @@ public class GererBadges extends JFrame implements ActionListener  {
 			bt_Bloquer.setText("Debloquer");
 		}
 		bt_Bloquer.repaint();
+	}
+	
+	/**
+	 * Permet de renseigner sur l'interface la personne associée au badge
+	 * @param id : ID de la personne associée
+	 */
+	public void setProprietaire(int id) {
+		idProprio = id;
+		Personne p = LienBDD.findPersfromID(id);
+		lb_idaff.setText(" Personne affectée :  "  + p.getNom() + " " + p.getPrenom());
 	}
     
 }
