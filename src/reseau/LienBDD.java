@@ -171,7 +171,7 @@ public class LienBDD {
 		if(recherche.length() == 0)
 			s = askDB(  "SELECT * FROM PERSONNES",0); 
 		else
-			s = askDB(  "SELECT * FROM PERSONNES WHERE NOM LIKE '%" + recherche +"%' OR PRENOM LIKE '%" + recherche +"%' ",0); 
+			s = askDB(  "SELECT * FROM PERSONNES WHERE LOWER(NOM) LIKE LOWER('%" + recherche +"%') OR LOWER(PRENOM) LIKE LOWER('%" + recherche +"%') ",0); 
 		return s;
 	}
 
